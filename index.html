@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Girasoles para Tamara 🌻💛</title>
+  <style>
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background-color: #0d0d1a;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+      padding: 10px;
+    }
+
+    /* Estilo para el título de arriba (una sola línea) */
+    h1 {
+      color: #ffe600;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px rgba(255, 230, 0, 0.7);
+      
+      /* Controlar tamaño responsivo */
+      font-size: 2.5rem; /* Tamaño base para pantallas grandes */
+      text-align: center;
+      width: 100%;
+      
+      /* Forzar una sola línea */
+      white-space: nowrap; 
+      overflow: hidden;
+      text-overflow: ellipsis; /* Opcional: añade "..." si es demasiado largo */
+      
+      /* Ajuste automático para pantallas pequeñas/móviles */
+      max-width: 90vw;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Media query para ajustar tamaño en móviles pequeños si es necesario */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem; /* Tamaño reducido para pantallas pequeñas */
+      }
+    }
+
+    /* Estilo para el texto de abajo (personalizado) */
+    .subtexto {
+      color: #ffe600;
+      margin-top: 25px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      text-shadow: 0 0 15px rgba(255, 230, 0, 0.8);
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    
+    @media (max-width: 480px) {
+      .subtexto {
+        font-size: 1.8rem; /* Ajuste para el nombre largo en móvil */
+      }
+    }
+
+    canvas {
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Título superior (se mantiene en una línea) -->
+  <h1>Flores Amarillas Para Ti 🌻💛</h1>
+  
+  <canvas id="flowerCanvas"></canvas>
+  
+  <!-- Texto personalizado inferior -->
+  <div class="subtexto">💛te amo Tamara💛</div>
+
+  <script>
+    const canvas = document.getElementById('flowerCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Dimensiones del canvas para la flor
+    canvas.width = 400;
+    canvas.height = 500;
+
+    const centerX = canvas.width / 2;
+    const centerY = 200;
+    let petalAngle = 0;
+
+    // Función para dibujar el tallo y las hojas
+    function drawStemAndLeaves() {
+      // Tallo
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.quadraticCurveTo(centerX - 20, 350, centerX, 500);
+      ctx.lineWidth = 12;
+      ctx.strokeStyle = '#2d8a39';
+      ctx.stroke();
+
+      // Hoja Izquierda
+      ctx.beginPath();
+      ctx.moveTo(centerX - 8, 330);
+      ctx.quadraticCurveTo(centerX - 80, 290, centerX - 70, 350);
+      ctx.quadraticCurveTo(centerX - 30, 360, centerX - 8, 330);
+      ctx.fillStyle = '#226b2c';
+      ctx.fill();
+
+      // Hoja Derecha
+      ctx.beginPath();
+      ctx.moveTo(centerX + 8, 380);
+      ctx.quadraticCurveTo(centerX + 80, 340, centerX + 70, 400);
+      ctx.quadraticCurveTo(centerX + 30, 410, centerX + 8, 380);
+      ctx.fillStyle = '#226b2c';
+      ctx.fill();
+    }
+
+    // Función para dibujar un pétalo
+    function drawPetal(angle) {
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(-20, -70, 0, -130);
+      ctx.quadraticCurveTo(20, -70, 0, 0);
+      
+      const gradient = ctx.createLinearGradient(0, 0, 0, -130);
+      gradient.addColorStop(0, '#ff9900');
+      gradient.addColorStop(0.5, '#ffcc00');
+      gradient.addColorStop(1, '#ffff00');
+
+      ctx.fillStyle = gradient;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Función para dibujar el centro oscuro del girasol
+    function drawCenter() {
+      // Centro oscuro
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 45, 0, Math.PI * 2);
+      ctx.fillStyle = '#3d2314';
+      ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#5a341d';
+      ctx.stroke();
+
+      // Detalles del centro (semillas)
+      for (let i = 0; i < 60; i++) {
+        const r = Math.random() * 40;
+        const theta = Math.random() * Math.PI * 2;
+        const x = centerX + r * Math.cos(theta);
+        const y = centerY + r * Math.sin(theta);
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = '#24140b';
+        ctx.fill();
+      }
+    }
+
+    // Animación de dibujo de la flor
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawStemAndLeaves();
+
+      const totalPetals = 20;
+      const angleStep = (Math.PI * 2) / totalPetals;
+
+      // Dibujar pétalos paulatinamente
+      for (let i = 0; i < petalAngle; i++) {
+        drawPetal(i * angleStep);
+      }
+
+      drawCenter();
+
+      if (petalAngle < totalPetals) {
+        petalAngle += 0.2; // Velocidad de dibujo
+        requestAnimationFrame(animate);
+      }
+    }
+
+    animate();
+  </script>
+</body>
+</html>
